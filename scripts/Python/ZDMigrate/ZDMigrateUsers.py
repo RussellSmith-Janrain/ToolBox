@@ -1,12 +1,11 @@
+import json
+import requests
+import time
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-import json
-import requests
-import time
-
 
 # Some persistent browser stuff
 # ------------------------------------------------------------------------
@@ -22,6 +21,7 @@ def get_or_create_browser():
     return driver
 
 get_or_create_browser()
+# ------------------------------------------------------------------------
 
 
 # Some element wait stuff
@@ -49,7 +49,7 @@ def create_user(username):
             user_create_url
             , data=user_create_payload
             , headers=user_create_headers
-            , auth=('username_here', 'password_here')
+            , auth=('jira_admin_username', 'password')
     )
     post_data = post_request
     print post_data.text
@@ -75,7 +75,8 @@ def login(username, password):
     pass_elem.send_keys(password)
     login_elem.send_keys(Keys.RETURN)
     time.sleep(3)
-login('username_here', 'password_here')
+
+login('jira_admin_username', 'password')
 
 
 # User access rights are updated through the UI using Selenium
@@ -121,22 +122,13 @@ def update_org(username):
     user_submit_elem = driver.find_element_by_id("user-properties-add-submit")
     user_submit_elem.send_keys(Keys.RETURN)
 
-    # Assert property added
-    table_id = driver.find_element(By.CLASS_NAME, 'aui')
-    rows = table_id.find_elements(By.TAG_NAME, "tr") # get all of the rows in the table
-    for row in rows:
-        # Get the columns (all the column 2)
-        col = row.find_elements(By.TAG_NAME, "td") #note: index start from 0, 1 is col 2
-        print col #prints text from the element
-
 update_org('someMigrate')
 
 
 # Close the browser
 # ------------------------------------------------------------------------
-def done():
-    # Cleanup
-    driver.close()
-
-done()
-
+# def done():
+#     # Cleanup
+#     driver.close()
+#
+# done()
